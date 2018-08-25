@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Display a map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.css' rel='stylesheet' />
+    <script src="nami.js"></script>
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+        #gif { position:absolute; top:50%; left:50%; }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<img id='gif' src="assets/pacman.gif"/>
+<script>
+
+let canvas = document.createElement('canvas');
+canvas.id = "canvas";
+document.body.appendChild(canvas);
+
+
+let data = {
+    bathymetry: '../assets/bathymetry.png',
+    bathymetryMetadata: {
+        zmin: -6709,
+        zmax: 10684
+    },
+    earthquake: [{
+        depth: 22900,
+        strike: 17,
+        dip: 13.0,
+        rake: 108.0,
+        U3: 0.0,
+        cn: -36.122,
+        ce: -72.898,
+        Mw: 9,
+        reference: 'center'
+    }],
+    coordinates: 'spherical',
+    waveWidth: parseInt(2159*0.5),
+    waveHeight: parseInt(960*0.5),
+    xmin: -179.991,
+    xmax: 179.675,
+    ymin: -71.991,
+    ymax: 79.8411,
+    isPeriodic: true,
+    canvas:canvas,
+}
+
+let output = {
+    displayWidth: parseInt(2159*0.5),
+    displayHeight: parseInt(960*0.5),
+    stopTime: 60 * 60 * 30,
+    displayOption: 'heights',
+};
+
+let niterations = 0;
+let lifeCycle = {
+    dataWasLoaded: (model) => {
+        //document.body.appendChild(model.canvas);
+        document.getElementById('gif').style = 'display:none';
+    },
+    modelStepDidFinish: (model, controller) => {
+        if (model.discretization.stepNumber % 1000 == 0) {
+            console.log(model.currentTime/60/60, controller.stopTime/60/60);
+        }
+        niterations = niterations + 1;
+
+
+        if (niterations % 100 == 0) {
+            niterations = 0;
+            return false;
+        }
+        else {
+            return true;
+        }
+
+    }
+
+}
+function loop() {
+    window.requestAnimationFrame(loop);
+}
+loop();
+
+var mapStyle = {
+    "version": 8,
+    "name": "tsunamilab",
+    "sources": {
+        "mapbox://mapbox.satellite": {
+            "url": "mapbox://mapbox.satellite",
+            "type": "raster",
+            "tileSize": 256
+        },
+        "canvas": {
+            "type": 'canvas',
+            "canvas": 'canvas',
+            "coordinates": [
+                [-179.991, 79.8411],
+                [179.675, 79.841],
+                [179.675, -71.991],
+                [-179.991, -71.991]
+            ],
+            "dimensions": [0, 0, mapWidth, mapHeight]
+        }
+    },
+    "layers": [
+        {
+            "id": "mapbox-satellite",
+            "type": "raster",
+            "source": "mapbox://mapbox.satellite",
+        },
+        {
+            "id": "canvas",
+            "source": "canvas",
+            "type": "raster",
+            "paint": {"raster-opacity": 0.8}
+        }
+    ]
+};
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2VsYmVydGluIiwiYSI6ImNqbDg0N3o1ejBkMjAzdm84b2dyZTE5ZW4ifQ.WIFB9uoghXkhmueTJip_xg';
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: mapStyle,
+    zoom: 1
+});
+
+var mapCanvas = map.getCanvasContainer().querySelector('canvas');
+var mapWidth = mapCanvas.width;
+var mapHeight = mapCanvas.height;
+
+thismodel = new NAMI.app(data, output, lifeCycle);
+</script>
+
+</body>
+</html>
