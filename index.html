@@ -338,6 +338,8 @@ var map = new mapboxgl.Map({
     zoom: 1
 });
 
+map.addControl(new mapboxgl.NavigationControl());
+    
 var mapCanvas = map.getCanvasContainer().querySelector('canvas');
 var mapWidth = mapCanvas.width;
 var mapHeight = mapCanvas.height;
