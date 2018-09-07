@@ -110,7 +110,7 @@ var mapStyle = {
   "pitch": 0,
   "sources": {
     "composite": {
-      "url": "mapbox://mapbox.mapbox-streets-v7",
+      "url": "mapbox://celbertin.cjle7h2mn0gbm32s6nherqcgd-62fyu,mapbox.mapbox-streets-v7",
       "type": "vector"
     },
     "mapbox://mapbox.satellite": {
@@ -147,7 +147,7 @@ var mapStyle = {
       ]
     }
   },
-  "sprite": "mapbox://sprites/celbertin/cjl86fxxp0epk2sqk9k2di6ip",
+  "sprite": "mapbox://sprites/celbertin/cjlguhbbl03262rnv3ajxxlox",
   "glyphs": "mapbox://fonts/celbertin/{fontstack}/{range}.pbf",
   "layers": [
     {
@@ -186,6 +186,17 @@ var mapStyle = {
         "raster-opacity": 0.8
       }
     },
+    {
+      "id": "subduction",
+      "type": "line",
+      "source": "composite",
+      "source-layer": "subduction",
+      "layout": {},
+      "paint": {
+          "line-color": "hsl(120, 100%, 50%)"
+      }
+    },
+
     {
       "id": "country-label",
       "type": "symbol",
@@ -339,7 +350,7 @@ var map = new mapboxgl.Map({
 });
 
 map.addControl(new mapboxgl.NavigationControl());
-    
+
 var mapCanvas = map.getCanvasContainer().querySelector('canvas');
 var mapWidth = mapCanvas.width;
 var mapHeight = mapCanvas.height;
