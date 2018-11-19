@@ -60,11 +60,24 @@ let output = {
 };
 
 let niterations = 0;
+
+let dataLoadedCounter = 0;
+
 let lifeCycle = {
     dataWasLoaded: (model) => {
         //document.body.appendChild(model.canvas);
         document.getElementById('gif').style = 'display:none';
     },
+
+    controllerLoaded: (model, controller) => {
+        controller.togglePause();
+
+        // make the user wait
+        confirm("Are you sure you want a Tsunami! Your answer does not matter :D");
+
+        controller.togglePause();
+    },
+
     modelStepDidFinish: (model, controller) => {
         if (model.discretization.stepNumber % 1000 == 0) {
             console.log(model.currentTime/60/60, controller.stopTime/60/60);
@@ -83,10 +96,11 @@ let lifeCycle = {
     }
 
 }
-function loop() {
-    window.requestAnimationFrame(loop);
-}
-loop();
+
+//function loop() {
+//    window.requestAnimationFrame(loop);
+//}
+//loop();
 
 var mapStyle = {
   "version": 8,
