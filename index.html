@@ -62,20 +62,24 @@ let output = {
 let niterations = 0;
 
 let dataLoadedCounter = 0;
+let currentController;
+    
+document.addEventListener("click", function(){
+    if (dataLoadedCounter == 1){
+        currentController.togglePause();
+    }
+});
 
 let lifeCycle = {
     dataWasLoaded: (model) => {
         //document.body.appendChild(model.canvas);
         document.getElementById('gif').style = 'display:none';
+        dataLoadedCounter++;
     },
 
     controllerLoaded: (model, controller) => {
-        controller.togglePause();
-
-        // make the user wait
-        confirm("Are you sure you want a Tsunami! Your answer does not matter :D");
-
-        controller.togglePause();
+        currentController = controller;
+        currentController.togglePause();
     },
 
     modelStepDidFinish: (model, controller) => {
