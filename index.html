@@ -63,20 +63,12 @@ let niterations = 0;
 
 let dataLoadedCounter = 0;
 let currentController;
-
-function showTsunami(){
-  if (dataLoadedCounter == 1){
-      currentController.togglePause();
-  }
-}
-
-function onMapRenderComplete (map, callback) {
-  if (map.loaded()){
-    console.log("Map loading completed: " + map.loaded());
-    return callback();
-  }
-  map.once('render', () => onMapRenderComplete(map, callback))
-}
+    
+document.addEventListener("click", function(){
+    if (dataLoadedCounter == 1){
+        currentController.togglePause();
+    }
+});
 
 let lifeCycle = {
     dataWasLoaded: (model) => {
@@ -88,7 +80,6 @@ let lifeCycle = {
     controllerLoaded: (model, controller) => {
         currentController = controller;
         currentController.togglePause();
-        console.log("Map not yet loaded in controller: " + map.loaded());
     },
 
     modelStepDidFinish: (model, controller) => {
@@ -383,8 +374,6 @@ var mapWidth = mapCanvas.width;
 var mapHeight = mapCanvas.height;
 
 thismodel = new NAMI.app(data, output, lifeCycle);
-
-onMapRenderComplete(map, showTsunami);
 </script>
 
 </body>
