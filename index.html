@@ -63,10 +63,13 @@ let niterations = 0;
 
 let dataLoadedCounter = 0;
 let currentController;
+var startTime;
+    
     
 document.addEventListener("click", function(){
     if (dataLoadedCounter == 1){
         currentController.togglePause();
+        startTime = Date.now();
     }
 });
 
@@ -85,7 +88,16 @@ let lifeCycle = {
     modelStepDidFinish: (model, controller) => {
         if (model.discretization.stepNumber % 1000 == 0) {
             console.log(model.currentTime/60/60, controller.stopTime/60/60);
+            var timestepValue = model.currentTime/60/60;
+            
+            if (timestepValue > 20 && timestepValue < 23){
+                var millis = Date.now() - startTime;
+                console.log(millis);
+            }
+            
         }
+        
+        
         niterations = niterations + 1;
 
 
